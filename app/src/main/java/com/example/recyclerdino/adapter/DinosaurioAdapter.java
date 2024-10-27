@@ -1,4 +1,5 @@
 package com.example.recyclerdino.adapter;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,13 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.recyclerdino.R;
 import com.example.recyclerdino.models.Dinosaurio;
-
+import com.example.recyclerdino.Detalles;
+import android.content.Intent;
 import java.util.List;
+import android.util.Log;
 
 /* Entonces, mi clase adaptador hereda de RecyclerView.Adapter para ser el adaptador,
 y usa el ViewHolder, que ayuda a inflar (crear) las vistas de cada ítem solo una vez
 en lugar de hacerlo cada vez que un elemento de la lista se despliega.*/
-public class DinosaurioAdapter extends RecyclerView.Adapter<DinosaurioAdapter.DinosaurioViewHolder>{
+public class DinosaurioAdapter extends RecyclerView.Adapter<DinosaurioAdapter.DinosaurioViewHolder> {
     private List<Dinosaurio> dinosaurioslista;
 
     //crea la lista de dinosaurios(objeto) llamada dinosaurioslista
@@ -30,7 +33,6 @@ public class DinosaurioAdapter extends RecyclerView.Adapter<DinosaurioAdapter.Di
     public DinosaurioAdapter.DinosaurioViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.itemdino, parent, false);
-
         return new DinosaurioViewHolder(view);
     }
 
@@ -46,14 +48,25 @@ public class DinosaurioAdapter extends RecyclerView.Adapter<DinosaurioAdapter.Di
     //Sabe en qué iteración vamos, Obtiene los datos del ítem y Llama a DinosaurioViewHolder
     @Override
     public void onBindViewHolder(@NonNull DinosaurioAdapter.DinosaurioViewHolder holder, int position) {
-        holder.setData(dinosaurioslista.get(position));
+        Dinosaurio dinosaurio = dinosaurioslista.get(position);
+        holder.setData(dinosaurio);
+
+        holder.imgdino.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), Detalles.class);
+                intent.putExtra("dinosaurio", dinosaurio); // Pasamos el objeto
+                v.getContext().startActivity(intent);
+            }
+        });
     }
 
     //Asigna qué dato va en qué vista (o sea en dónde)
     public class DinosaurioViewHolder extends RecyclerView.ViewHolder {
-        TextView txtnombre,txttipo,txtdescripcion;
+        TextView txtnombre, txttipo, txtdescripcion;
         ImageView imgdino;
         Dinosaurio dino;
+
         public DinosaurioViewHolder(@NonNull View itemView) {
             super(itemView);
             txtnombre = itemView.findViewById(R.id.txtnombre);
@@ -63,7 +76,7 @@ public class DinosaurioAdapter extends RecyclerView.Adapter<DinosaurioAdapter.Di
         }
 
         public void setData(Dinosaurio dinosaurio) {
-            dino=dinosaurio;
+            dino = dinosaurio;
             txtnombre.setText(dino.getNombre());
             txttipo.setText(dino.getTipo());
             txtdescripcion.setText(dino.getDescripcion());

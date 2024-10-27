@@ -1,6 +1,7 @@
 package com.example.recyclerdino.models;
+import java.io.Serializable;
 
-public class Dinosaurio {
+public class Dinosaurio implements Serializable{ //hay que agregar que la clase se puede serializar
     private String nombre;
     private String tipo;
     private String descripcion;
